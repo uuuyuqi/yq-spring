@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 永远的主角！
  *
  * 是狭义上 spring 容器（虽然单例池更合适被认为是狭义上的IoC容器）的默认实现
- * 具备了祖先继承下来的 2 大核心功能
+ * 具备了祖先继承下来的 2 大核心功能：
  * 1. 来自祖先 BF 接口的 —— getBean 的功能
  * 2. 来自祖先 SingletonBeanRegistry 的单例 bean 注册功能（以及维护功能）
  */

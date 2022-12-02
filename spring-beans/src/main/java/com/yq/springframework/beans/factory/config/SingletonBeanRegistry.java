@@ -11,7 +11,14 @@ package com.yq.springframework.beans.factory.config;
 public interface SingletonBeanRegistry {
 
     /**
-     * 将 bean 放入单例池
+     *
+     * 将 bean 放入单例池，该方法在源码中实际上基本没发挥什么作用
+     * 一般将 bean 放入单例池，使用的都是 addSingleton()， 将单例放入一级缓存中
+     * 调用链路:
+     * getBean() --> doGetBean --> getSingleton()                   \--> addSingleton()
+     *                                  \--> createBean() --> doCreateBean()
+     *
+     * </pre>
      * @param beanName bean名称
      * @param singleton bean对象
      */

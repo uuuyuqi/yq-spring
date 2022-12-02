@@ -19,14 +19,21 @@ import com.yq.springframework.beans.factory.config.BeanDefinition;
  */
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
+    @Override
+    public Object getBean(String beanName) {
+        return getBean(beanName, (Object) null);
+    }
+
     /**
      * 这个地方是非抽象的（剩余方法都是抽象法，下沉到具体子类来实现），因为这个地方其实就是模板方法
      * 为后续子类提供好主线的 getBean 的流程
-     * @param beanName BF 中获取的 bean 的名称
-     * @return bean
+     * @param beanName beanName
+     * @param args bean 的构造器参数
+     * @return bean对象
+     * @throws BeansException 异常
      */
     @Override
-    public Object getBean(String beanName) {
+    public Object getBean(String beanName, Object... args) throws BeansException {
         // getSingleton方法 来自于默认单例注册器SingletonBeanRegistry
         // 这一步是先去单例池里面获取bean：
         //  - 获取到了，就返回
@@ -37,9 +44,8 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
 
-        return createBean(beanName,beanDefinition);
+        return createBean(beanName,beanDefinition,args);
     }
-
 
     protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
 
@@ -48,9 +54,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param beanName 创建后的 bean 名称
      * @param beanDefinition bean创建依据
      * @return bean实例对象
-     * @throws BeansException
+     * @throws BeansException 创建 bean 异常
      */
-    protected abstract Object createBean(String beanName,BeanDefinition beanDefinition) throws BeansException;
+    protected abstract Object createBean(String beanName,BeanDefinition beanDefinition,Object[] args) throws BeansException;
 
 
 
