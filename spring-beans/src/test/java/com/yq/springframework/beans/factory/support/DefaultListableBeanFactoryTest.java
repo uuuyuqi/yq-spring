@@ -52,6 +52,6 @@ public class DefaultListableBeanFactoryTest {
 
         TestBean tb = (TestBean) lbf.getBean("tb");
 
-        Assert.assertEquals("TestBean I am",tb.info());
+        Assert.assertEquals("TestBean I am",tb.speakSelf());
     }
 }
