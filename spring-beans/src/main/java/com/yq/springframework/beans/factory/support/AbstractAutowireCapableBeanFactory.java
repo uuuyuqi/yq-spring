@@ -20,7 +20,7 @@ import java.util.Arrays;
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory{
 
-    private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
+    private final InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
     protected InstantiationStrategy getInstantiationStrategy() {
         return this.instantiationStrategy;
     }
@@ -64,26 +64,81 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * 解析出该 bean 的构造器，然后将实例化任务委托给 实例化策略类 （这里直接是Cglibsubclassing策略）
      * @param beanName bean name
      * @param bd bean definition
-     * @param args bean 实例化时的 构造方法参数
+     * @param args bean 构造器参数 / bean 工厂方法的参数
      * @return 实例化出来的 bean 对象
      */
     protected Object createBeanInstance(String beanName, BeanDefinition bd, Object[] args){
         Constructor<?> constructorToUse;
-        Class<?> beanClass = bd.getClass();
+        Class<?> beanClass = bd.getBeanClass();
         if (beanClass.isInterface()) {
             throw new BeanInstantiationException(beanClass, "Specified class is an interface");
         }
 
+        //===========================================================================
+        // 以下部分和 spring 源码出入较大
+        // spring 源码会分析出构造器和工厂方法，然后去执行，这里只考虑构造器创建 bean 的场景，而args也单纯的只是构造器参数
 
         // 根据 args 分析出要使用的构造器
-        Class<?>[] paramTypes = new Class<?>[args.length];
+        Class<?>[] providedTypes = new Class<?>[args.length];
         for (int i = 0; i < args.length; i++) {
-            paramTypes[i] = args[i].getClass();
+            providedTypes[i] = args[i].getClass();
         }
 
         try {
-            Constructor<?> ctor = beanClass.getDeclaredConstructor(paramTypes);
-            return getInstantiationStrategy().instantiate(bd,beanName,ctor,args);
+            Constructor<?> targetCtor = null;
+            // args 为空数组 --> 直接获取无参构造方法
+            if (providedTypes.length == 0)
+                targetCtor = beanClass.getDeclaredConstructor();
+            // args 非空 --> 跟 beanClass 中现有的构造方法进行比对，选择出适配 args 的构造方法
+            // 这里有个有趣的问题需要解决：
+            //     args数组 是 Object[]，存在自动装箱的情况下，即原本构造方法参数类型是(int.class, long.class, String.class)
+            //     通过 args.forEach(Object::getClass) 获取出来的结果会是(Intger.class, Long.class, String.class)
+            //     这里就需要解决这个匹配问题
+            else {
+                Constructor<?>[] ctors = beanClass.getDeclaredConstructors();
+                for (Constructor<?> ctor : ctors) {
+                    Class<?>[] potentialTypes = ctor.getParameterTypes();
+                    if (potentialTypes.length == 0)
+                        continue;
+                    else if (Arrays.equals(providedTypes,potentialTypes)) {
+                        targetCtor = ctor;
+                        break;
+                    } else {
+                        // tempTypes 是避免污染 beanClass 本身其他的构造器参数列表
+                        Class<?>[] tempTypes = Arrays.copyOf(potentialTypes,potentialTypes.length);
+                        for (int i = 0; i < tempTypes.length; i++) {
+                            if (tempTypes[i] == boolean.class)
+                                tempTypes[i] = Boolean.class;
+                            else if (tempTypes[i] == byte.class)
+                                tempTypes[i] = Byte.class;
+                            else if (tempTypes[i] == char.class)
+                                tempTypes[i] = Character.class;
+                            else if (tempTypes[i] == short.class)
+                                tempTypes[i] = Short.class;
+                            else if (tempTypes[i] == int.class)
+                                tempTypes[i] = Integer.class;
+                            else if (tempTypes[i] == long.class)
+                                tempTypes[i] = Long.class;
+                            else if (tempTypes[i] == float.class)
+                                tempTypes[i] = Float.class;
+                            else if (tempTypes[i] == double.class)
+                                tempTypes[i] = Double.class;
+                        }
+
+                        if (Arrays.equals(providedTypes,tempTypes)){
+                            targetCtor = ctor;
+                            break;
+                        }
+                    }
+                }
+                
+                if (targetCtor == null) {
+                    throw new BeanInstantiationException(bd.getBeanClass(),"无法根据提供的参数找到合适的构造器");
+                }
+            }
+
+
+            return getInstantiationStrategy().instantiate(bd,beanName,targetCtor,args);
         } catch (NoSuchMethodException e) {
             throw new BeanInstantiationException(bd,"无法根据提供的参数找到合适的构造器",e);
         }
