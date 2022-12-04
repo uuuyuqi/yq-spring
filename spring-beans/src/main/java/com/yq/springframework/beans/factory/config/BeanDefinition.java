@@ -43,8 +43,17 @@ public class BeanDefinition {
         this.beanClass = beanClass;
     }
 
+
     /**
-     * 获取某个属性
+     * 设置属性集合
+     * @param propertyValues
+     */
+    public void setPropertyValues(MutablePropertyValues propertyValues) {
+        this.propertyValues = propertyValues;
+    }
+
+    /**
+     * 获取 bean 的属性集合
      * @return 属性
      */
     public MutablePropertyValues getPropertyValues() {
@@ -56,7 +65,7 @@ public class BeanDefinition {
 
     /**
      * 是否具有属性
-     * @return
+     * @return bool
      */
     public boolean hasPropertyValues() {
         return (this.propertyValues != null && !this.propertyValues.isEmpty());
