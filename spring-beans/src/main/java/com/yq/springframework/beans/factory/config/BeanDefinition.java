@@ -8,6 +8,7 @@ import com.yq.springframework.beans.PropertyValues;
  * Bean 的定义元信息
  * 源码中 BeanDefinition 是个接口，基础功能在 AbstractBeanDefinition 中
  * 此处简单实现直接实现成了类
+ *
  */
 public class BeanDefinition {
 
