@@ -6,6 +6,8 @@ public class TestBean {
     private String name = "YOUR TEST WENT WRONG! PLEASE CHECK!";
 
 
+    public TestBean() {
+    }
 
     public TestBean(Integer id, String name) {
         this.id = id;
