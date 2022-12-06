@@ -7,6 +7,9 @@ import net.sf.cglib.proxy.NoOp;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * cglib 方式的实例化策略
+ */
 public class CglibSubclassingInstantiationStrategy implements InstantiationStrategy{
     @Override
     public Object instantiate(BeanDefinition bd, String beanName, Constructor<?> ctor, Object[] args) throws BeansException {
