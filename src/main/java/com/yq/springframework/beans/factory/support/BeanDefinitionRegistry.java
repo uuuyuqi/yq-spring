@@ -16,5 +16,16 @@ public interface BeanDefinitionRegistry {
 
     void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
 
+    /**
+     * 获取当前 holder 中 BD 的个数
+     * @return BD 的个数
+     */
+    int getBeanDefinitionCount();
 
+    /**
+     * 是否含有 beanName 的 BeanDefinition
+     * @param beanName beanName
+     * @return 存在返回是
+     */
+    boolean containsBeanDefinition(String beanName);
 }
