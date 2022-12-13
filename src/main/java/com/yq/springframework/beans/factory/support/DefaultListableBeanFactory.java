@@ -46,4 +46,22 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         beanDefinitionMap.put(beanName,beanDefinition);
     }
 
+    /**
+     * 获取当前 holder 中 BD 的个数
+     * @return BD 的个数
+     */
+    @Override
+    public int getBeanDefinitionCount() {
+        return this.beanDefinitionMap.size();
+    }
+
+    /**
+     * 查询当前 BD Map, 是否含有某 name 的 BD
+     * @param beanName beanName
+     * @return 是否含有某 name 的 BD
+     */
+    @Override
+    public boolean containsBeanDefinition(String beanName) {
+        return beanDefinitionMap.containsKey(beanName);
+    }
 }
