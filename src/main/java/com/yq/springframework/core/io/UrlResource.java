@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Assert;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
-import java.nio.channels.ReadableByteChannel;
 
 /**
  * URL 资源

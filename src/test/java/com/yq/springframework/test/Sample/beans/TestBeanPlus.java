@@ -10,11 +10,11 @@ public class TestBeanPlus {
         this.testBean = bean;
     }
 
-    public TestBean getBean() {
+    public TestBean getTestBean() {
         return testBean;
     }
 
-    public void setBean(TestBean bean) {
+    public void setTestBean(TestBean bean) {
         this.testBean = bean;
     }
 

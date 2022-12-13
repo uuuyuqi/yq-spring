@@ -12,6 +12,7 @@ import java.net.URL;
 public class DefaultResourceLoader implements ResourceLoader {
 
     private final String CLASSPATH_URL_PREFIX = "classpath:";
+    private final String FILE_PATH_PREFIX = "file:";
 
     @Override
     public Resource getResource(String location) {
@@ -22,6 +23,11 @@ public class DefaultResourceLoader implements ResourceLoader {
 
         if (location.startsWith(CLASSPATH_URL_PREFIX)) {
             return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()));
+        }
+        // 在 spring 源码中，file 文件系统是直接通过:  URL + 类型判断为 file 的方式，直接放到 else 中处理的
+        // 这里为了简化，直接加了一层 file 的判断
+        else if (location.startsWith(FILE_PATH_PREFIX)){
+            return new FileSystemResource(location.substring(FILE_PATH_PREFIX.length()));
         }
         else {
             try {

@@ -11,6 +11,8 @@ import java.nio.channels.ReadableByteChannel;
  * 那么问题来了，这些 BD 从哪儿获取？ 肯定是来自配置文件、或者也可以来自于配置中心下发？ 无论如何这些 BD 从哪儿来，最终一定是一些
  * 配置信息整理出来，那显然是以 流 的形式读取。
  *
+ * 所以个人觉得，这个所谓的 Resource，其实就是 —— BeanDefinitionResource !
+ *
  * 显而易见，spring 必须拥有一套资源加载机制 ！
  */
 public interface Resource {
