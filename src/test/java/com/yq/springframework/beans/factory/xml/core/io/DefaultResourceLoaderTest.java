@@ -44,6 +44,19 @@ public class DefaultResourceLoaderTest {
 
     }
 
+    // 使用 resource 获取文件路径资源
+    @Test
+    public void getResource_file2() throws IOException {
+
+        String fileUrl = "src\\test\\resources\\spring-context.xml";
+        Resource resource = resourceLoader.getResource(fileUrl);
+
+        String fromResource = IoUtil.read(resource.getInputStream(),"UTF-8");
+
+        Assert.assertEquals(prepareContent(),fromResource);
+
+    }
+
     // 使用 resource 获取 classpath 资源
     @Test
     public void getResource_cp() throws IOException {

@@ -19,7 +19,7 @@ public class DefaultResourceLoader implements ResourceLoader {
         Assert.notNull(location,"Location must not be null");
 
         // 在 spring 中，这个地方开了个口子，允许用户自定义 xx协议 的资源加载过程
-        // 这个协议也是用户自定的
+        // 这个协议的处理也是用户自定的
 
         if (location.startsWith(CLASSPATH_URL_PREFIX)) {
             return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()));
@@ -36,8 +36,8 @@ public class DefaultResourceLoader implements ResourceLoader {
                 return new UrlResource(url);
             }
             catch (MalformedURLException ex) {
-                // No URL -> resolve as resource path.
-                throw new RuntimeException("resource [" + location + "] can not resolve");
+                // 按照文件系统的方式加载
+                return new FileSystemResource(location);
             }
         }
     }
