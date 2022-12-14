@@ -19,7 +19,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext{
      * 刷新 spring 上下文
      * 注意，该方法是 spring 启动过程中最核心的方法，没有之一！
      *
-     * 实际上 refresh 方法的作用，就是在 是 spring 上下文
+     * 实际上 refresh 方法的作用，就是在 是 spring 上下文创建时，对 BF 进行一些配置(主要是)
      * @throws BeansException ex
      */
     void refresh() throws BeansException;
