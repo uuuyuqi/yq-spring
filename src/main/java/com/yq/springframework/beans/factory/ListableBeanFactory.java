@@ -24,4 +24,11 @@ public interface ListableBeanFactory extends BeanFactory{
      * @return 所有 bean 的名称
      */
     String[] getBeanDefinitionNames();
+
+    /**
+     * 按照类型 tyoe 来查找 bean
+     * @param type bean 类型
+     * @return bean names
+     */
+    String[] getBeanNamesForType(Class<?> type);
 }
