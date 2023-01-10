@@ -1,16 +1,15 @@
 package com.yq.springframework.beans.factory.support;
 
+import com.yq.springframework.beans.BeanInstantiationException;
 import com.yq.springframework.beans.BeansException;
 import com.yq.springframework.beans.MutablePropertyValues;
-import com.yq.springframework.beans.PropertyValue;
 import com.yq.springframework.beans.factory.config.BeanDefinition;
 import com.yq.springframework.beans.factory.config.BeanReference;
 import com.yq.springframework.test.Sample.beans.TestBean;
 import com.yq.springframework.test.Sample.beans.TestBeanPlus;
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class AbstractAutowireCapableBeanFactoryTest {
 
@@ -26,6 +25,7 @@ public class AbstractAutowireCapableBeanFactoryTest {
      * 测试 bean 实例的创建
      */
     @Test
+    @DisplayName("BF createBeanInstance 使用默认构造器 正产,异常案例")
     public void createBeanInstance() {
         // 正常情况1
         String beanName = "tb";
@@ -33,7 +33,7 @@ public class AbstractAutowireCapableBeanFactoryTest {
         Object[] args = new Object[] {1001,"Zhang San"};
 
         TestBean bean = (TestBean)abstractAutowireCapableBF.createBean(beanName, bd, args);
-        Assert.assertEquals(1001+""+"Zhang San",bean.info());
+        Assertions.assertEquals(1001+""+"Zhang San",bean.info());
 
 
         // 正常情况2
@@ -42,7 +42,7 @@ public class AbstractAutowireCapableBeanFactoryTest {
         Object[] args2 = new Object[] {new Integer(1002),"Zhang San2"};
 
         TestBean bean2 = (TestBean)abstractAutowireCapableBF.createBean(beanName2, bd2, args2);
-        Assert.assertEquals(1002+""+"Zhang San2",bean2.info());
+        Assertions.assertEquals(1002+""+"Zhang San2",bean2.info());
 
 
 
@@ -51,16 +51,14 @@ public class AbstractAutowireCapableBeanFactoryTest {
         BeanDefinition bd3 = new BeanDefinition(TestBean.class);
         Object[] args3 = new Object[] {new Integer(1003),"Zhang San3","redundant param"};
 
-        try{
+        Assertions.assertThrows(BeanInstantiationException.class,()->{
             TestBean bean3 = (TestBean)abstractAutowireCapableBF.createBean(beanName3, bd3, args3);
-        }catch (Exception e){
-            Assert.assertEquals("Failed to instantiate [" + bd3.getBeanClass().getCanonicalName() +"]: 无法根据提供的参数找到合适的构造器",e.getMessage());
-        }
-        
-        
-
+        });
     }
 
+    /**
+     * Bean 实例创建 并且没有配置参数
+     */
     @Test
     public void getBeanWithNoParam() {
         // 正常情况X args = null
@@ -69,7 +67,7 @@ public class AbstractAutowireCapableBeanFactoryTest {
         Object[] argsX = null;
 
         TestBean beanX = (TestBean)abstractAutowireCapableBF.createBean(beanNameX, bdX, null);
-        Assert.assertEquals("9999999YOUR TEST WENT WRONG! PLEASE CHECK!",beanX.info());
+        Assertions.assertEquals("9999999YOUR TEST WENT WRONG! PLEASE CHECK!",beanX.info());
     }
 
 
@@ -86,7 +84,7 @@ public class AbstractAutowireCapableBeanFactoryTest {
             1001,"ZhangSan"
         });
 
-        Assert.assertEquals("1001ZhangSan",testBean.info());
+        Assertions.assertEquals("1001ZhangSan",testBean.info());
     }
 
 

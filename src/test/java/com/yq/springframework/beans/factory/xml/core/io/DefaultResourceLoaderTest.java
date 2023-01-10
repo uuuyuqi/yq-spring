@@ -6,8 +6,8 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.yq.springframework.core.io.DefaultResourceLoader;
 import com.yq.springframework.core.io.Resource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -27,7 +27,7 @@ public class DefaultResourceLoaderTest {
 
         String fromResource = IoUtil.read(resource.getInputStream(),"UTF-8");
 
-        Assert.assertEquals(prepareContent(),fromResource);
+        Assertions.assertEquals(prepareContent(),fromResource);
 
     }
 
@@ -40,7 +40,7 @@ public class DefaultResourceLoaderTest {
 
         String fromResource = IoUtil.read(resource.getInputStream(),"UTF-8");
 
-        Assert.assertEquals(prepareContent(),fromResource);
+        Assertions.assertEquals(prepareContent(),fromResource);
 
     }
 
@@ -53,7 +53,7 @@ public class DefaultResourceLoaderTest {
 
         String fromResource = IoUtil.read(resource.getInputStream(),"UTF-8");
 
-        Assert.assertEquals(prepareContent(),fromResource);
+        Assertions.assertEquals(prepareContent(),fromResource);
 
     }
 
@@ -66,7 +66,7 @@ public class DefaultResourceLoaderTest {
 
         String fromResource = IoUtil.read(resource.getInputStream(),"UTF-8");
 
-        Assert.assertEquals(prepareContent(),fromResource);
+        Assertions.assertEquals(prepareContent(),fromResource);
 
     }
 

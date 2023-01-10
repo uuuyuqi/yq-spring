@@ -2,8 +2,8 @@ package com.yq.springframework.beans.factory.xml;
 
 import com.yq.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.yq.springframework.test.Sample.beans.TestBeanPlus;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XmlBeanDefinitionReaderTest {
 
@@ -19,7 +19,7 @@ public class XmlBeanDefinitionReaderTest {
         TestBeanPlus beanPlus = (TestBeanPlus) lbf.getBean("tbp");
         String info = beanPlus.getTestBean().info();
 
-        Assert.assertEquals("1000ZDK", info);
+        Assertions.assertEquals("1000ZDK", info);
     }
 
     /**
@@ -34,7 +34,7 @@ public class XmlBeanDefinitionReaderTest {
         TestBeanPlus beanPlus = (TestBeanPlus) lbf.getBean("tbp");
         String info = beanPlus.getTestBean().info();
 
-        Assert.assertEquals("1000ZDK", info);
+        Assertions.assertEquals("1000ZDK", info);
     }
 
 
@@ -47,7 +47,7 @@ public class XmlBeanDefinitionReaderTest {
         try {
             bdReader.loadBeanDefinitions(configFile);
         }catch (Exception e){
-            Assert.assertEquals("已存在该名称[tbp]的 bean 元信息! bean 名称不允许重复!",
+            Assertions.assertEquals("已存在该名称[tbp]的 bean 元信息! bean 名称不允许重复!",
                     e.getMessage());
         }
     }

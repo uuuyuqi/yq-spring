@@ -1,9 +1,10 @@
 package com.yq.springframework.beans.factory.support;
 
+import com.yq.springframework.beans.factory.NoSuchBeanDefinitionException;
 import com.yq.springframework.beans.factory.config.BeanDefinition;
 import com.yq.springframework.test.Sample.beans.TestBean;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 public class DefaultListableBeanFactoryTest {
@@ -18,7 +19,7 @@ public class DefaultListableBeanFactoryTest {
         TestBean testBean = new TestBean(1000,"someTestBean");
         lbf.registerSingleton("tb",testBean);
 
-        Assert.assertSame("getSingleton",testBean, lbf.getSingleton("tb"));
+        Assertions.assertSame(testBean, lbf.getSingleton("tb"));
     }
 
     /**
@@ -30,15 +31,12 @@ public class DefaultListableBeanFactoryTest {
         lbf.registerBeanDefinition("tb",bd);
 
         // 测试正常 bd 获取
-        Assert.assertSame("registerBeanDefinition  && getBeanDefinition",lbf.getBeanDefinition("tb"),bd);
+        Assertions.assertSame(lbf.getBeanDefinition("tb"),bd);
 
         // 测试获取不到 bd
-        try {
+        Assertions.assertThrows(NoSuchBeanDefinitionException.class,()->{
             lbf.getBeanDefinition("Jack");
-        }catch (Exception e){
-            Assert.assertEquals("No bean named '" + "Jack" + "' available", e.getMessage());
-        }
-
+        });
     }
 
     /**
@@ -52,6 +50,6 @@ public class DefaultListableBeanFactoryTest {
 
         TestBean tb = (TestBean) lbf.getBean("tb");
 
-        Assert.assertEquals("TestBean I am",tb.speakSelf());
+        Assertions.assertEquals("TestBean I am",tb.speakSelf());
     }
 }
