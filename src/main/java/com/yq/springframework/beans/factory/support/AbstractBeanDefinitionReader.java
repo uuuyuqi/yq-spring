@@ -22,18 +22,29 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
     private final BeanDefinitionRegistry registry;
 
     /**
-     * 这里直接使用 DefaultResourceLoader 反正这一个基本直接通吃所有类型的 resource
+     *  一般情况下都是 DefaultResourceLoader 反正这一个基本直接通吃所有类型的 resource
      */
-    private final ResourceLoader resourceLoader = new DefaultResourceLoader();
+    private ResourceLoader resourceLoader;
 
     public AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
         Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
         this.registry = registry;
+
+        if (this.registry instanceof ResourceLoader) {
+            this.resourceLoader = (ResourceLoader) this.registry;
+        }
+        else {
+            this.resourceLoader = new DefaultResourceLoader();
+        }
     }
 
     @Override
     public BeanDefinitionRegistry getRegistry() {
         return this.registry;
+    }
+
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     @Override

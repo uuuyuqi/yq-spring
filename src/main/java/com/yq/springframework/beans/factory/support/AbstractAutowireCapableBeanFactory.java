@@ -5,12 +5,13 @@ import com.yq.springframework.beans.BeanInstantiationException;
 import com.yq.springframework.beans.BeansException;
 import com.yq.springframework.beans.MutablePropertyValues;
 import com.yq.springframework.beans.PropertyValue;
+import com.yq.springframework.beans.factory.BeanFactory;
+import com.yq.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import com.yq.springframework.beans.factory.BeanInitializationException;
 import com.yq.springframework.beans.factory.config.BeanDefinition;
 import com.yq.springframework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
 /**
@@ -24,9 +25,23 @@ import java.util.Arrays;
  * <p>
  * 实际上这一层相当于是 抽象BF类 的增强抽象，开启了 BF 具备自动注入功能的主线任务！
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory
+        extends AbstractBeanFactory
+        implements AutowireCapableBeanFactory {
 
     private final InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
+
+
+    public AbstractAutowireCapableBeanFactory() {
+    }
+
+    /**
+     * 将父工厂传入
+     * @param parentBeanFactory 父工厂
+     */
+    public AbstractAutowireCapableBeanFactory(BeanFactory parentBeanFactory) {
+        setParentBeanFactory(parentBeanFactory);
+    }
 
     protected InstantiationStrategy getInstantiationStrategy() {
         return this.instantiationStrategy;
@@ -204,7 +219,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             MutablePropertyValues pvs = bd.getPropertyValues();
             for (PropertyValue pv : pvs) {
                 String p = pv.getName();
-                Object v = pv.getValue();
+                Object v = pv.getValue();     //  这个地方没有对 value 做类型转换(传入的概率都是 String，应该做转换的), 使用不当会有问题
 
                 // 判断待注入的属性，是否是 spring 中其他的 bean
                 // 目前没考虑循环依赖
@@ -225,4 +240,29 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
     }
 
+    /**
+     * 初始化【前】处理
+     *
+     * @param existingBean 现有的待处理的 bean
+     * @param beanName     bean 名称
+     * @return 处理后的 bean
+     * @throws BeansException ex
+     */
+    @Override
+    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
+        return null;
+    }
+
+    /**
+     * 初始化【后】处理
+     *
+     * @param existingBean 现有的待处理的 bean
+     * @param beanName     bean 名称
+     * @return 处理后的 bean
+     * @throws BeansException ex
+     */
+    @Override
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException {
+        return null;
+    }
 }

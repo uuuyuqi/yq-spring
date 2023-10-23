@@ -23,32 +23,20 @@ import java.io.InputStream;
 
 /**
  * 显然 ClassPathResource 代表了 classpath 目录下的配置文件资源
+ *
+ * 在 spring 源码中，这个地方还支持使用 class 来加载资源，和 classloader 相比,
+ * class.getResource 默认加载的是当前 class 路径(具体到当前包)下的 resource
  */
 public class ClassPathResource implements Resource{
 
 
     private final String path;
 
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
-    private Class<?> clazz;
 
     public ClassPathResource(String path) {
-        this(path,(ClassLoader)null);
-    }
-
-
-    public ClassPathResource(String path, ClassLoader classLoader) {
-        Assert.notNull(path,"Path must not be null");
-        this.path = path;
-        this.classLoader = (classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader());
-    }
-
-
-    public ClassPathResource(String path, Class<?> clazz) {
-        Assert.notNull(path, "Path must not be null");
-        this.path = path;
-        this.clazz = clazz;
+        this(path,null);
     }
 
 
@@ -56,13 +44,14 @@ public class ClassPathResource implements Resource{
      *
      * @param path classpath 中的相对或绝对路径
      * @param classLoader 用来载资源的类加载器
-     * @param clazz 用来载资源的 class
      */
-    public ClassPathResource(String path, ClassLoader classLoader, Class<?> clazz) {
+    public ClassPathResource(String path, ClassLoader classLoader) {
+        Assert.notNull(path,"Path must not be null");
         this.path = path;
-        this.classLoader = classLoader;
-        this.clazz = clazz;
+        this.classLoader = (classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader());
     }
+
+
 
     /**
      * 以流的形式获取类路径下的资源
@@ -73,10 +62,7 @@ public class ClassPathResource implements Resource{
     @Override
     public InputStream getInputStream() throws IOException {
         InputStream is;
-        if (this.clazz != null) {
-            is = this.clazz.getResourceAsStream(path);
-        }
-        else if (this.classLoader != null) {
+        if (this.classLoader != null) {
             is = this.classLoader.getResourceAsStream(path);
         }
         else {

@@ -7,12 +7,12 @@ import java.net.URL;
 
 /**
  * ResourceLoader 的默认实现，具有 load Resource 的行为
- *
+ * @author uuuyuqi
  */
 public class DefaultResourceLoader implements ResourceLoader {
 
-    private final String CLASSPATH_URL_PREFIX = "classpath:";
-    private final String FILE_PATH_PREFIX = "file:";
+    private static final String CLASSPATH_URL_PREFIX = "classpath:";
+    private static final String FILE_PATH_PREFIX = "file:";
 
     @Override
     public Resource getResource(String location) {

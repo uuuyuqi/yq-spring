@@ -1,6 +1,7 @@
 package com.yq.springframework.util;
 
-public class ClassUtils {
+final public class ClassUtils {
+
 
     /**
      * 默认获取 TCCL，一般结果肯定是 System Classloader
